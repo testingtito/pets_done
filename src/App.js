@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import Header from './components/Header';
+import Footer from './components/Footer';
+import LikeArea from './components/LikeArea';
+import TimeArea from './components/TimeArea';
+import AddForm from './components/AddForm';
+import Pet from './components/Pet';
 
-function App() {
+const App = () => {
+  const [pets, setPets] = useState([]);
+
+  useEffect(() => {
+    if (localStorage.getItem("data")) {
+      setPets(JSON.parse(localStorage.getItem("data")));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("data", JSON.stringify(pets));
+  }, [pets]);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <LikeArea />
+      <TimeArea />
+      <AddForm setPets={setPets} />
+      {
+        pets.map(
+          pet =>
+            <Pet
+              setPets={setPets}
+              name={pet.name}
+              species={pet.species}
+              age={pet.age}
+              id={pet.id}
+              key={pet.id}
+            />
+        )
+      }
+      <Footer />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
